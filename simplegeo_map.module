@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * Gets the available marker themes.
+ */
+function simplegeo_map_marker_themes() {
+  $sets = array();
+  foreach (module_implements('simplegeo_map_marker_themes') as $module) {
+    $res = call_user_func($module . '_simplegeo_map_marker_themes');
+    if (is_array($res)) {
+      $sets = $res + $sets;
+    }
+  }
+  return $sets;
+}
+
+/**
+ * Implementation of hook_simplegeo_map_marker_themes().
+ */
+function simplegeo_map_simplegeo_map_marker_themes() {
+  $sets = array(
+    'black' => array(
+      'title' => t('Black'),
+    ),
+    'orange' => array(
+      'title' => t('Orange'),
+    ),
+  );
+
+  $url = url(drupal_get_path('module', 'simplegeo_map') . '/img');
+
+  $tresholds = array(
+    array(
+      'treshold' => 1,
+      'size' => array(15, 21),
+      'anchor' => array(8, 21),
+    ),
+    array(
+      'treshold' => 2,
+      'size' => array(21, 21),
+      'anchor' => array(10, 10),
+      'labelOffset' => array(-9, -5),
+    ),
+    array(
+      'treshold' => 10,
+      'size' => array(39, 39),
+      'anchor' => array(19, 19),
+      'labelOffset' => array(-19, -7),
+    ),
+    array(
+      'treshold' => 50,
+      'size' => array(49, 49),
+      'anchor' => array(24, 24),
+      'labelOffset' => array(-24, -10),
+    ),
+    array(
+      'treshold' => 100,
+      'size' => array(59, 59),
+      'anchor' => array(24, 24),
+      'labelOffset' => array(-24, -10),
+    ),
+  );
+
+  foreach ($sets as $key => &$data) {
+    foreach ($tresholds as $treshold) {
+      $treshold['marker'] = $url . '/' . $key . '_' . $treshold['size'][0] . '.png';
+      $data['markers'][] = $treshold;
+    }
+  }
+
+  return $sets;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function simplegeo_map_block($op = 'list', $delta = 0) {
+  global $user;
+
+  if ($op == 'list') {
+    $block['map']['info'] = t('Map');
+    return $block;
+  }
+  else if ($op == 'view') {
+    if ($delta == 'map') {
+      $position = variable_get('simple_geo_default_position', FALSE);
+      _simplegeo_map_setup_map($position, 12);
+
+      $block['title'] = t('Map');
+      $block['content'] = '<div id="simplegeo-map-wrapper"><div id="simplegeo-map"></div></div>';
+    }
+  }
+  return $block;
+}
+
+/**
+ * Includes the necessary javascript and css files for the Simple Geo map.
+ *
+ * @param string $center 
+ * @param int $zoom 
+ * @return void
+ */
+function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
+  $path = drupal_get_path('module', 'simplegeo_map');
+  drupal_add_js($path .'/js/simplegeo_map.js', 'module');
+
+  foreach (module_implements('simplegeo_map_source') as $module) {
+    $sources = call_user_func($module . '_simplegeo_map_source');
+    $module_path = drupal_get_path('module', $module);
+    foreach ($sources as $source) {
+      foreach ($source['js'] as $script) {
+        drupal_add_js($module_path . '/' . $script, 'module', 'footer');
+      }
+      if (!empty($source['css'])) {
+        foreach ($source['css'] as $css) {
+          drupal_add_css($module_path . '/' . $css);
+        }
+      }
+    }
+  }
+
+  // Add these JS files to the footer since they have to come after simplegeo_map.js
+  // that loads the google maps api and because of aggregated CSS.
+  drupal_add_js($path .'/js/labeledmarker.js', 'module', 'footer');
+  drupal_add_js($path .'/js/ClusterMarker.js', 'module', 'footer');
+  drupal_add_css($path .'/css/simplegeo_map.css');
+
+  if ($center) {
+    $settings['center'] = $center;
+  }
+  if ($zoom) {
+    $settings['zoom'] = $zoom;
+  }
+
+  $settings['maxNodes'] = variable_get('simplegeo_api_max_node_info', SIMPLEGEO_API_MAX_NODE_INFO);
+  $themes = simplegeo_map_marker_themes();
+  $theme = variable_get('simplegeo_map_marker_theme', 'orange');
+  $settings['markerTheme'] = $themes[$theme];
+
+
+  // Allow other modules to alter our settings.
+  drupal_alter('simplegeo_map_settings', $settings);
+  drupal_add_js(array('simpleGeoMap' => $settings), 'setting');
+}

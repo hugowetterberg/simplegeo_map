@@ -1,0 +1,4 @@
+name = Simple Geo Map
+core = 6.x
+description = Provides a Map block that can be used to display data from the Simple Geo API.
+package = Geo
