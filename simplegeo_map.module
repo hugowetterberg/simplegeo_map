@@ -103,6 +103,7 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
 function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   $path = drupal_get_path('module', 'simplegeo_map');
   drupal_add_js($path .'/js/simplegeo_map.js', 'module');
+  drupal_add_js($path .'/js/jquery.cookie.js', 'module');
 
   foreach (module_implements('simplegeo_map_source') as $module) {
     $sources = call_user_func($module . '_simplegeo_map_source');

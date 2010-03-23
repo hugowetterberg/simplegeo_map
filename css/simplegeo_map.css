@@ -84,16 +84,23 @@ div.marker-label-59 {
   padding: 5px;
 }
 
-#simplegeomap-tag-filters li {
-  display: inline;
-  padding-right: 0.5em;
+#simplegeo-map-wrapper ul.dialog {
+  margin: 0;
 }
 
-#simplegeomap-tag-filters li a.active {
+#simplegeo-map-wrapper ul.dialog li {
+  display: block;
+  float: left;
+  padding-right: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+#simplegeo-map-wrapper .dialog a.active {
   font-weight: bold;
 }
 
 #simplegeo-map-wrapper #simplegeo-map {
+  clear: left;
   height: 200px;
 }
 
@@ -120,10 +127,11 @@ html.fullscreen #simplegeo-map-wrapper.large #simplegeo-map, html.fullscreen #si
   height: 100%;
   width: auto;
 }
-html.fullscreen #simplegeo-map-wrapper h2.box {
+html.fullscreen #simplegeomap-toolbar {
   width: 100%;
   position:absolute;
   z-index: 55;
+  background-color: #FFFFFF;
 }
 html.fullscreen #extlargemapcontrol {
   top: 44px !important;

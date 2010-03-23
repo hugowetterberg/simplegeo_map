@@ -194,43 +194,48 @@ var SimpleGeoMap = {};
       };
       url = source.query(data);
 
-      // Get markers
-      ajax = $.ajax({
-        url: url,
-        data: data,
-        dataType: 'json',
-        beforeSend: function () {
-          // Abort previous requests;
-          if (typeof ajax !== 'undefined') {
-            ajax.abort();
-          }
-          loaderShow();
-        },
-        success: function (json) {
-          source.result(json, function (type, m) {
-            var clusterBounds = new GLatLngBounds();
-            if (m.NW) {
-              clusterBounds.extend(new GLatLng(m.NW[0], m.NW[1]));
-              clusterBounds.extend(new GLatLng(m.SE[0], m.SE[1]));
+      if (url) {
+        // Get markers
+        ajax = $.ajax({
+          url: url,
+          data: data,
+          dataType: 'json',
+          beforeSend: function () {
+            // Abort previous requests;
+            if (typeof ajax !== 'undefined') {
+              ajax.abort();
             }
-            else {
-              clusterBounds.extend(new GLatLng(m.lat, m.lon));
-            };
-            markersArray.push(newMarker(type, new GLatLng(m.lat, m.lon), m.count, clusterBounds, m.nid, Drupal.t("Show items"), map));
-          });
+            loaderShow();
+          },
+          success: function (json) {
+            source.result(json, function (type, m) {
+              var clusterBounds = new GLatLngBounds();
+              if (m.NW) {
+                clusterBounds.extend(new GLatLng(m.NW[0], m.NW[1]));
+                clusterBounds.extend(new GLatLng(m.SE[0], m.SE[1]));
+              }
+              else {
+                clusterBounds.extend(new GLatLng(m.lat, m.lon));
+              };
+              markersArray.push(newMarker(type, new GLatLng(m.lat, m.lon), m.count, clusterBounds, m.nid, Drupal.t("Show items"), map));
+            });
 
-          // Save the current center
-          oldCenter = pixel;
+            // Save the current center
+            oldCenter = pixel;
 
-          // Remove previous cluster.
-          SimpleGeoMap.removeMarkers();
+            // Remove previous cluster.
+            SimpleGeoMap.removeMarkers();
 
-          // Add cluster
-          cluster.addMarkers(markersArray);
-          cluster.refresh();
-          loader.hide();
-        }
-      });
+            // Add cluster
+            cluster.addMarkers(markersArray);
+            cluster.refresh();
+            loader.hide();
+          }
+        });
+      }
+      else {
+        SimpleGeoMap.removeMarkers();
+      }
     }
   };
 
@@ -337,6 +342,7 @@ var SimpleGeoMap = {};
         $("html").removeClass('fullscreen');
         $("a", this).text(Drupal.t('Fullscreen'));
         mapWrapper.replaceAll('#map-temp-wrapper');
+        $('#lmc3d').css('top', '7px');
         fullscreen = false;
       }
       else {
@@ -344,6 +350,7 @@ var SimpleGeoMap = {};
         $("a", this).text(Drupal.t('Leave fullscreen'));
         mapWrapper.before('<div id="map-temp-wrapper"></div>').prependTo('body');
         SimpleGeoMap.updateMarkers(true);
+        $('#lmc3d').css('top', (7 + SimpleGeoMap.toolbar.outerHeight()) + 'px');
         fullscreen = true;
       }
       map.checkResize();
