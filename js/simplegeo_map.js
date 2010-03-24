@@ -128,7 +128,7 @@ var SimpleGeoMap = {};
 
         if (map.getZoom() < maxZoom) {
           $('<a class="zoom" href="#">' + Drupal.formatPlural(clusterCount, 'Zoom in to marker', 'Zoom in to markers') + '</a>').appendTo(markerInfo).click(function() {
-            map.setCenter(markerLocation, map.getBoundsZoomLevel(clusterBounds));
+            map.setCenter(markerLocation, map.getBoundsZoomLevel(clusterBounds)-1);
             return false;
           });
         }
