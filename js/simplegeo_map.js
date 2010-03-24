@@ -119,7 +119,7 @@ var SimpleGeoMap = {};
         infoWindowContent = $('#simplegeomap-info-content').empty(),
         markerInfo = $('<div class="marker-info marker-info-loading"></div>').appendTo(infoWindowContent);
 
-      markerInfo.load(Drupal.settings.basePath + 'tileservice/api/info?nids=' + markerId.join(','), function () {
+      markerInfo.load(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function () {
         $(this).removeClass('marker-info-loading');
 
         if ((clusterCount != 1)) {
