@@ -105,15 +105,15 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   drupal_add_js($path .'/js/simplegeo_map.js', 'module');
   drupal_add_js($path .'/js/jquery.cookie.js', 'module');
 
-  foreach (module_implements('simplegeo_map_source') as $module) {
-    $sources = call_user_func($module . '_simplegeo_map_source');
+  foreach (module_implements('simplegeo_map_plugin') as $module) {
+    $plugins = call_user_func($module . '_simplegeo_map_plugin');
     $module_path = drupal_get_path('module', $module);
-    foreach ($sources as $source) {
-      foreach ($source['js'] as $script) {
+    foreach ($plugins as $plugin) {
+      foreach ($plugin['js'] as $script) {
         drupal_add_js($module_path . '/' . $script, 'module', 'footer');
       }
-      if (!empty($source['css'])) {
-        foreach ($source['css'] as $css) {
+      if (!empty($plugin['css'])) {
+        foreach ($plugin['css'] as $css) {
           drupal_add_css($module_path . '/' . $css);
         }
       }
