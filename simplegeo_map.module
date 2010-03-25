@@ -138,6 +138,12 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   $theme = variable_get('simplegeo_map_marker_theme', 'orange');
   $settings['markerTheme'] = $themes[$theme];
 
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if (!empty($node->simple_geo_area)) {
+      $settings['area'] = $node->simple_geo_area;
+    }
+  }
 
   // Allow other modules to alter our settings.
   drupal_alter('simplegeo_map_settings', $settings);

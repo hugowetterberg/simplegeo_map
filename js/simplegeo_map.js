@@ -362,7 +362,7 @@ var SimpleGeoMap = {};
   }
 
   function setCenter() {
-    var zoom, center, positions, mapBounds, p;
+    var zoom, center, positions, mapBounds, p, midLat=0, midLon=0;
     if (Drupal.settings.simpleGeoMap.center) {
       center = Drupal.settings.simpleGeoMap.center.split(" ");
       center = new GLatLng(center[0], center[1]);
@@ -374,9 +374,9 @@ var SimpleGeoMap = {};
     else {
       center = new GLatLng(55.655897188968034, 12.557373046875);
     }
-    if (Drupal.settings.simple_geo_area) {
-      positions = Drupal.settings.simple_geo_area.split(",");
 
+    if (Drupal.settings.simpleGeoMap.area) {
+      positions = Drupal.settings.simpleGeoMap.area.split(",");
       mapBounds = new GLatLngBounds();
 
       if (positions) {
@@ -384,11 +384,15 @@ var SimpleGeoMap = {};
           if (positions.hasOwnProperty(p)) {
             point = positions[p].split(" ");
             mapBounds.extend(new GLatLng(point[0], point[1]));
+            midLat += parseFloat(point[0]);
+            midLon += parseFloat(point[1]);
           }
         }
+        midLat = midLat / positions.length;
+        midLon = midLon / positions.length;
+        center = new GLatLng(midLat, midLon);
+        zoom = map.getBoundsZoomLevel(mapBounds);
       }
-
-      zoom = map.getBoundsZoomLevel(mapBounds) + 1;
     }
     else if (Drupal.settings.simpleGeoMap.zoom) {
       zoom = Drupal.settings.simpleGeoMap.zoom;
