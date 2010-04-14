@@ -18,6 +18,8 @@ function simplegeo_map_marker_themes() {
  * Implementation of hook_simplegeo_map_marker_themes().
  */
 function simplegeo_map_simplegeo_map_marker_themes() {
+  global $base_path;
+
   $sets = array(
     'black' => array(
       'title' => t('Black'),
@@ -27,7 +29,7 @@ function simplegeo_map_simplegeo_map_marker_themes() {
     ),
   );
 
-  $url = url(drupal_get_path('module', 'simplegeo_map') . '/img');
+  $url = $base_path . drupal_get_path('module', 'simplegeo_map') . '/img';
 
   $tresholds = array(
     array(
