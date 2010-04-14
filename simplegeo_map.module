@@ -84,7 +84,8 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
   else if ($op == 'view') {
     if ($delta == 'map') {
       $position = variable_get('simple_geo_default_position', FALSE);
-      _simplegeo_map_setup_map($position, 12);
+      $zoom = variable_get('simple_geo_min_zoom', 12);
+      _simplegeo_map_setup_map($position, $zoom);
 
       $block['title'] = t('Map');
       $block['content'] = '<div id="simplegeo-map-wrapper"><div id="simplegeo-map"></div></div>';
