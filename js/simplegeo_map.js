@@ -5,7 +5,7 @@ var SimpleGeoMap = {};
   var map, mapWrapper, cluster,
   oldCenter = false, padding = 256, ajax, infoWindow, filterInputs, filters,
   filterCookie, enabledFilters = [], loader, mapState = 1, smallZoomControl,
-  largeZoomControl, helpBox, maxZoom = 17, minZoom = 7, 
+  largeZoomControl, helpBox, maxZoom = 17, minZoom = 7,
   sources = {}, activeSource = null,
   loaderShow = function() {
     loader.show();
@@ -23,6 +23,18 @@ var SimpleGeoMap = {};
       activeSource = name;
       SimpleGeoMap.updateMarkers(true);
     }
+  };
+
+  SimpleGeoMap.setInfoWindow = function(win) {
+    infoWindow = win;
+  };
+
+  SimpleGeoMap.getMap = function() {
+    return map;
+  };
+
+  SimpleGeoMap.getMapElement = function() {
+    return SimpleGeoMap.mapElement;
   };
 
   function newMarker(type, markerLocation, clusterCount, clusterBounds, markerId, title, map) {
@@ -110,14 +122,12 @@ var SimpleGeoMap = {};
       marker = getClusterMarker(clusterCount, type);
     }
 
+    // Marker clicked, show infoWindow
     GEvent.addListener(marker, "click", function () {
-      var pos = map.fromLatLngToContainerPixel(markerLocation),
-        infoWindowContent = $('#simplegeomap-info-content').empty(),
-        markerInfo = $('<div class="marker-info marker-info-loading"></div>').appendTo(infoWindowContent);
-
-      markerInfo.load(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function () {
-        $(this).removeClass('marker-info-loading');
-
+      infoWindow.show(marker);
+      $.get(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function (data) {
+        infoWindow.didFinishLoadingContent(data);
+        /*
         if ((clusterCount != 1)) {
           setupPager(markerId, marker, markerInfo);
         };
@@ -128,13 +138,8 @@ var SimpleGeoMap = {};
             return false;
           });
         }
+      */
       });
-
-      var mapOffset = $(SimpleGeoMap.mapElement).offset();
-      infoWindow.css({
-        'top': pos.y + mapOffset.top + marker.getIcon().iconSize.height - marker.getIcon().iconAnchor.y + 2,
-        'left': pos.x + mapOffset.left - marker.getIcon().iconAnchor.x
-      }).show();
     });
 
 
@@ -142,7 +147,6 @@ var SimpleGeoMap = {};
     marker.clusterCount = clusterCount;
     marker.markerId = markerId;
     marker.clusterBounds = clusterBounds;
-
     return marker;
   }
 
@@ -160,7 +164,7 @@ var SimpleGeoMap = {};
       SimpleGeoMap.removeMarkers();
       return;
     }
-    
+
     var size = map.getSize(),
     zoomLevel = map.getZoom(),
     center = map.getCenter(),
@@ -452,12 +456,8 @@ var SimpleGeoMap = {};
     });
 
 
-    //marker Infowindow
-    infoWindow = $('<div id="simplegeomap-info-window"><div id="simplegeomap-info-content"></div></div>').appendTo('body').hide();
-    $('<a href="#" class="close">' + Drupal.t('Close') + '</a>').prependTo(infoWindow).click(function () {
-      infoWindow.hide();
-      return false;
-    });
+    // Marker Infowindow
+    infoWindow.init();
 
     //Add loader
     loader = $('<div id="simplegeomap-loader">Loading...</div>').insertBefore(SimpleGeoMap.mapElement).hide();
@@ -472,7 +472,7 @@ var SimpleGeoMap = {};
       addToolbar();
     }
 
-    // Helbox
+    // Helpbox
     helpBox = $('#simplegeomap-help');
     if ($.cookie('simplegeoMapTouched') !== '1') {
       helpBox.show();
