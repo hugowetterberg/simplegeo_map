@@ -122,8 +122,8 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
 /**
  * Includes the necessary javascript and css files for the Simple Geo map.
  *
- * @param string $center 
- * @param int $zoom 
+ * @param string $center
+ * @param int $zoom
  * @return void
  */
 function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
@@ -134,9 +134,12 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   foreach (module_implements('simplegeo_map_plugin') as $module) {
     $plugins = call_user_func($module . '_simplegeo_map_plugin');
     $module_path = drupal_get_path('module', $module);
+
     foreach ($plugins as $plugin) {
-      foreach ($plugin['js'] as $script) {
-        drupal_add_js($module_path . '/' . $script, 'module', 'footer');
+      if (!empty($plugin['js'])) {
+        foreach ($plugin['js'] as $script) {
+          drupal_add_js($module_path . '/' . $script, 'module', 'footer');
+        }
       }
       if (!empty($plugin['css'])) {
         foreach ($plugin['css'] as $css) {
