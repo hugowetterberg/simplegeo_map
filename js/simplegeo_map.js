@@ -31,7 +31,7 @@ var SimpleGeoMap = {};
       var lastMatch = null, markers = Drupal.settings.simpleGeoMap.markerTheme.markers,
         i = 0, count = markers.length;
       for (i=0; i<count; i++) {
-        if (markers[i].treshold > clusterCount) {
+        if (markers[i].threshold > clusterCount) {
           break;
         }
         lastMatch = markers[i];

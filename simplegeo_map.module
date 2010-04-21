@@ -31,32 +31,32 @@ function simplegeo_map_simplegeo_map_marker_themes() {
 
   $url = $base_path . drupal_get_path('module', 'simplegeo_map') . '/img';
 
-  $tresholds = array(
+  $thresholds = array(
     array(
-      'treshold' => 1,
+      'threshold' => 1,
       'size' => array(15, 21),
       'anchor' => array(8, 21),
     ),
     array(
-      'treshold' => 2,
+      'threshold' => 2,
       'size' => array(21, 21),
       'anchor' => array(10, 10),
       'labelOffset' => array(-9, -5),
     ),
     array(
-      'treshold' => 10,
+      'threshold' => 10,
       'size' => array(39, 39),
       'anchor' => array(19, 19),
       'labelOffset' => array(-19, -7),
     ),
     array(
-      'treshold' => 50,
+      'threshold' => 50,
       'size' => array(49, 49),
       'anchor' => array(24, 24),
       'labelOffset' => array(-24, -10),
     ),
     array(
-      'treshold' => 100,
+      'threshold' => 100,
       'size' => array(59, 59),
       'anchor' => array(24, 24),
       'labelOffset' => array(-24, -10),
@@ -64,9 +64,9 @@ function simplegeo_map_simplegeo_map_marker_themes() {
   );
 
   foreach ($sets as $key => &$data) {
-    foreach ($tresholds as $treshold) {
-      $treshold['marker'] = $url . '/' . $key . '_' . $treshold['size'][0] . '.png';
-      $data['markers'][] = $treshold;
+    foreach ($thresholds as $threshold) {
+      $threshold['marker'] = $url . '/' . $key . '_' . $threshold['size'][0] . '.png';
+      $data['markers'][] = $threshold;
     }
   }
 
