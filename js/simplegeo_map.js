@@ -51,7 +51,7 @@ var SimpleGeoMap = {};
         "labelText": (iconInfo.labelShow == 0) ? '' : clusterCount.toString(),
         "labelOffset": new GSize(iconInfo.labelOffset[0], iconInfo.labelOffset[1]),
         "labelClass": 'marker-label marker-label-' + iconInfo.threshold + ' marker-label-chars-' + clusterCount.toString().length,
-        "title": title
+        "title": Drupal.t('Hits in this cluster: @hits', {'@hits' : clusterCount.toString()})
       };
       return new LabeledMarker(markerLocation, opts);
     },
