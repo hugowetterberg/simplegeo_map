@@ -50,7 +50,7 @@ var SimpleGeoMap = {};
         "clickable": true,
         "labelText": clusterCount.toString(),
         "labelOffset": new GSize(iconInfo.labelOffset[0], iconInfo.labelOffset[1]),
-        "labelClass": 'marker-label marker-label-' + iconInfo.size[0],
+        "labelClass": 'marker-label marker-label-' + iconInfo.threshold + ' marker-label-chars-' + clusterCount.toString().length,
         "title": title
       };
       return new LabeledMarker(markerLocation, opts);
