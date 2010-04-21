@@ -44,7 +44,7 @@ div.marker-label-59 {
 #simplegeomap-loader {
   z-index: 1000;
   position: absolute;
-  background: url(img/progress-black.gif) top left no-repeat;
+  background: url(../img/progress-black.gif) top left no-repeat;
   width: 56px;
   height: 21px;
   text-indent: -999px;
