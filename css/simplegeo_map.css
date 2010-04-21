@@ -1,12 +1,12 @@
 div.marker-label {
-	display: block;
+  display: block;
 }
 
 div.marker-label {
-	text-align: center;
-	color: white;
-	font-weight: bold;
-	line-height: 1;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  line-height: 1;
 }
 div.marker-label-21 {
   font-size: 11px;
