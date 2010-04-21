@@ -8,10 +8,6 @@ var SimpleGeoMap = {};
   largeZoomControl, helpBox, maxZoom = 17, minZoom = 7, 
   sources = {}, activeSource = null,
   loaderShow = function() {
-    loader.css({
-      top: $(SimpleGeoMap.mapElement).outerHeight() / 2 - loader.outerHeight() / 2,
-      left: $(SimpleGeoMap.mapElement).outerWidth() / 2 - loader.outerWidth() / 2
-    });
     loader.show();
   };
 
