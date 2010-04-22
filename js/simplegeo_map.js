@@ -37,6 +37,10 @@ var SimpleGeoMap = {};
     return SimpleGeoMap.mapElement;
   };
 
+  SimpleGeoMap.getMaxZoom = function() {
+    return maxZoom;
+  };
+
   function newMarker(type, markerLocation, clusterCount, clusterBounds, markerId, title, map) {
     var marker,
     getMarkerTheme = function (clusterCount, type) {
@@ -76,40 +80,6 @@ var SimpleGeoMap = {};
       return new GMarker(markerLocation, icon);
     };
 
-    function setupPager(markerId, marker, markerInfo) {
-      var total = markerId.length,
-        pagerTitle = marker.clusterCount > total ? Drupal.t('<span class="current">1</span> of latest <span class="total">!total</span>', {'!total' : total}) : Drupal.t('<span class="current">1</span> of <span class="total">!total</span>'),
-        pager = $('<div class="item-list"><ul class="pager clear-block"><li class="pager-previous"><a href="#">' + Drupal.t('Previous') +'</a></li><li class="pager-next"><a href="#">' + Drupal.t('Next') + '</a></li><li>' + pagerTitle + '</li></ul></div>').prependTo(markerInfo),
-        currentCount = $("span.current", pager), index = 0, oldNode = false;
-
-      function page(index) {
-        if (oldNode) {
-          oldNode.hide();
-        }
-        else {
-          $("div.node", markerInfo).hide();
-        }
-        // Loop from 1 to total
-        index = (index % (total));
-        oldNode = $("div.node:eq(" + index + ")", markerInfo).show();
-        currentCount.text(index + 1);
-      }
-
-      $("span.total", pager).text(markerId.length);
-      $(".pager-previous a", pager).click(function () {
-        index--;
-        page(index);
-        return false;
-      });
-      $(".pager-next a", pager).click(function () {
-        index++;
-        page(index);
-        return false;
-      });
-
-      page(index);
-    }
-
     if (clusterCount == 1) {
       marker = getSingleMarker(type);
       // Zoom in when doubleclicking a single marker.
@@ -124,24 +94,12 @@ var SimpleGeoMap = {};
 
     // Marker clicked, show infoWindow
     GEvent.addListener(marker, "click", function () {
-      infoWindow.show(marker);
+      infoWindow.show(marker, clusterBounds, markerId);
       $.get(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function (data) {
-        infoWindow.didFinishLoadingContent(data);
-        /*
-        if ((clusterCount != 1)) {
-          setupPager(markerId, marker, markerInfo);
-        };
-
-        if (map.getZoom() < maxZoom) {
-          $('<a class="zoom" href="#">' + Drupal.formatPlural(clusterCount, 'Zoom in to marker', 'Zoom in to markers') + '</a>').appendTo(markerInfo).click(function() {
-            map.setCenter(markerLocation, map.getBoundsZoomLevel(clusterBounds)-1);
-            return false;
-          });
-        }
-      */
+        // Tell infoWindow that content finished loading
+        infoWindow.didFinishLoadingContent(data, clusterCount);
       });
     });
-
 
     // Store data needed by ClusterMarker.js when creating markers.
     marker.clusterCount = clusterCount;

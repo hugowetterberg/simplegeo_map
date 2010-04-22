@@ -7,8 +7,13 @@
  *  The clicked marker
  */
 (function (SimpleGeoMap) {
-  var elem,
-  infoWindow = {
+  var elem,             // The infoWindow DOM element
+      marker,           // Clicked marker object
+      markerId,         // Nids in cluster
+      clusterBounds;    // Cluster bounds (GLatLngBounds)
+
+  // The info window object
+  var infoWindow = {
     /**
      * Initialize the infoWindow adding it to <body>
      */
@@ -24,8 +29,14 @@
      * Display infoWindow, usually on marker click
      *
      * @param   object    marker
+     * @param   object    clusterBounds
+     * @param   array     markerId
      */
-    show: function (marker) {
+    show: function (m, cb, mId) {
+      marker = m;
+      clusterBounds = cb;
+      markerId = mId;
+
       // Determine marker position
       var pos     = SimpleGeoMap.getMap().fromLatLngToContainerPixel(marker.getLatLng());
       var offset  = $(SimpleGeoMap.getMapElement()).offset();
@@ -47,22 +58,78 @@
     /**
      * Hide the infoWindow
      */
-     hide: function () {
-        elem.hide();
-     },
+    hide: function () {
+      elem.hide();
+    },
 
     /**
      * Did finish loading contents
      *
      * @param   object    contents
+     * @param   int       clusterCount
      */
-     didFinishLoadingContent: function (contents) {
-       // Inject content
-       $('#simplegeomap-info-content').empty();
-       $('#simplegeomap-info-content').html(contents);
+    didFinishLoadingContent: function (contents, clusterCount) {
+      // Inject content
+      $('#simplegeomap-info-content').empty();
+      $('#simplegeomap-info-content').html(contents).hide();
 
-       // Show content
-     }
+      $(elem).children('.zoom').remove();
+      if (SimpleGeoMap.getMap().getZoom() < SimpleGeoMap.getMaxZoom()) {
+        $('<a class="zoom" href="#">' + Drupal.formatPlural(clusterCount, 'Zoom in to marker', 'Zoom in to markers') + '</a>').appendTo(elem).click(function() {
+          SimpleGeoMap.getMap().setCenter(marker.getLatLng(), SimpleGeoMap.getMap().getBoundsZoomLevel(clusterBounds)-1);
+          return false;
+        });
+      }
+
+      // Setup pager
+      if (clusterCount > 1) {
+        setupPager(markerId, marker, $('#simplegeomap-info-content'));
+      }
+
+      // Show content
+      $('#simplegeomap-info-content').slideDown();
+    }
+  };
+
+  /**
+   * Private pager function
+   *
+   * @param   array   markerId
+   * @param   object  marker
+   * @param   object  markerInfo
+   */
+  var setupPager = function (markerId, marker, markerInfo) {
+    var total = markerId.length,
+      pagerTitle = marker.clusterCount > total ? Drupal.t('<span class="current">1</span> of latest <span class="total">!total</span>', {'!total' : total}) : Drupal.t('<span class="current">1</span> of <span class="total">!total</span>'),
+      pager = $('<div class="item-list"><ul class="pager clear-block"><li class="pager-previous"><a href="#">' + Drupal.t('Previous') +'</a></li><li class="pager-next"><a href="#">' + Drupal.t('Next') + '</a></li><li>' + pagerTitle + '</li></ul></div>').prependTo(markerInfo),
+      currentCount = $("span.current", pager), index = 0, oldNode = false;
+
+    function page(index) {
+      if (oldNode) {
+        oldNode.hide();
+      }
+      else {
+        $("div.node", markerInfo).hide();
+      }
+      // Loop from 1 to total
+      index = (index % (total));
+      oldNode = $("div.node:eq(" + index + ")", markerInfo).show();
+      currentCount.text(index + 1);
+    }
+
+    $("span.total", pager).text(markerId.length);
+    $(".pager-previous a", pager).click(function () {
+      index--;
+      page(index);
+      return false;
+    });
+    $(".pager-next a", pager).click(function () {
+      index++;
+      page(index);
+      return false;
+    });
+
+    page(index);
   };
 
   // Register this info window with SimpleGeoMap
