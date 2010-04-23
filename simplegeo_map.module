@@ -129,14 +129,21 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
 function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   $path = drupal_get_path('module', 'simplegeo_map');
   drupal_add_js($path .'/js/simplegeo_map.js', 'module');
-  drupal_add_js($path .'/js/simplegeo_infowindow.js', 'module');
   drupal_add_js($path .'/js/jquery.cookie.js', 'module');
+
+  $enabled_plugins = variable_get('simplegeo_map_plugins', array(
+    'simplegeo_map_infowindow' => 'simplegeo_map_infowindow',
+  ));
 
   foreach (module_implements('simplegeo_map_plugin') as $module) {
     $plugins = call_user_func($module . '_simplegeo_map_plugin');
     $module_path = drupal_get_path('module', $module);
 
     foreach ($plugins as $plugin) {
+      if (empty($enabled_plugins[$plugin['name']])) {
+        continue;
+      }
+
       if (!empty($plugin['js'])) {
         foreach ($plugin['js'] as $script) {
           drupal_add_js($module_path . '/' . $script, 'module', 'footer');
@@ -178,4 +185,19 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
   // Allow other modules to alter our settings.
   drupal_alter('simplegeo_map_settings', $settings);
   drupal_add_js(array('simpleGeoMap' => $settings), 'setting');
+}
+
+/**
+ * Implementation of hook_simplegeo_map_plugin().
+ */
+function simplegeo_map_simplegeo_map_plugin() {
+  $plugins = array();
+
+  $plugins[] = array(
+    'name' => 'simplegeo_map_infowindow',
+    'title' => t('Default info window'),
+    'js' => array('js/simplegeo_infowindow.js'),
+  );
+
+  return $plugins;
 }

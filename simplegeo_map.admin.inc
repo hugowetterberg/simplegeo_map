@@ -33,7 +33,24 @@ function simplegeo_map_settings() {
       '#value'        => '20',
     );
   }
-  
+
+  $plugins = array();
+  foreach (module_implements('simplegeo_map_plugin') as $module) {
+    $mp = call_user_func($module . '_simplegeo_map_plugin');
+    foreach ($mp as $plug) {
+      $plugins[$plug['name']] = $plug['title'];
+    }
+  }
+
+  $form['simplegeo_map_plugins'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Map plugins'),
+    '#options' => $plugins,
+    '#default_value' => variable_get('simplegeo_map_plugins', array(
+      'simplegeo_map_infowindow' => 'simplegeo_map_infowindow',
+    )),
+  );
+
   return system_settings_form($form);
 }
 

@@ -94,11 +94,13 @@ var SimpleGeoMap = {};
 
     // Marker clicked, show infoWindow
     GEvent.addListener(marker, "click", function () {
-      infoWindow.show(marker, clusterBounds, markerId);
-      $.get(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function (data) {
-        // Tell infoWindow that content finished loading
-        infoWindow.didFinishLoadingContent(data, clusterCount);
-      });
+      if (infoWindow) {
+        infoWindow.show(marker, clusterBounds, markerId);
+        $.get(Drupal.settings.basePath + 'geo/api/node-info?nids=' + markerId.join(','), function (data) {
+          // Tell infoWindow that content finished loading
+          infoWindow.didFinishLoadingContent(data, clusterCount);
+        });
+      }
     });
 
     // Store data needed by ClusterMarker.js when creating markers.
@@ -399,23 +401,29 @@ var SimpleGeoMap = {};
 
     GEvent.addListener(map, "click", function (overlay) {
       closeHelpBox();
-      if (!overlay) {
+      if (!overlay && infoWindow) {
         infoWindow.hide();
       }
     });
     GEvent.addListener(map, "movestart", function () {
       closeHelpBox();
-      infoWindow.hide();
+      if (infoWindow) {
+        infoWindow.hide();
+      }
     });
     GEvent.addListener(map, "moveend", function () {
       closeHelpBox();
-      infoWindow.hide();
+      if (infoWindow) {
+        infoWindow.hide();
+      }
       SimpleGeoMap.updateMarkers();
     });
 
 
     // Marker Infowindow
-    infoWindow.init();
+    if (infoWindow) {
+      infoWindow.init();
+    }
 
     //Add loader
     loader = $('<div id="simplegeomap-loader">Loading...</div>').insertBefore(SimpleGeoMap.mapElement).hide();
