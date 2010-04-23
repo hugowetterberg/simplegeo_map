@@ -8,23 +8,19 @@ div.marker-label {
   font-weight: bold;
   line-height: 1;
 }
-div.marker-label-21 {
-  font-size: 11px;
-  width: 21px;
-}
-div.marker-label-29 {
+div.marker-label-2 {
   font-size: 12px;
-  width: 29px;
+  width: 20px;
 }
-div.marker-label-39 {
+div.marker-label-10 {
   font-size: 14px;
   width: 39px;
 }
-div.marker-label-49 {
+div.marker-label-50 {
   font-size: 18px;
   width: 49px;
 }
-div.marker-label-59 {
+div.marker-label-100 {
   font-size: 18px;
   width: 59px;
 }
