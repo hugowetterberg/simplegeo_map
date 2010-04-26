@@ -355,7 +355,7 @@ var SimpleGeoMap = {};
       }
     }
     else if (Drupal.settings.simpleGeoMap.zoom) {
-      zoom = Drupal.settings.simpleGeoMap.zoom;
+      zoom = parseInt(Drupal.settings.simpleGeoMap.zoom);
     }
     else {
       zoom = 10;
@@ -369,19 +369,6 @@ var SimpleGeoMap = {};
 
     SimpleGeoMap.mapElement = document.getElementById("simplegeo-map");
     map = new GMap2(SimpleGeoMap.mapElement);
-
-    // Restricting the range of Zoom Levels
-    // Get the list of map types
-    mt = map.getMapTypes();
-    // Overwrite the getMinimumResolution() and getMaximumResolution() methods
-    for (i=0; i<mt.length; i++) {
-      mt[i].getMinimumResolution = function () {
-        return minZoom;
-      };
-      mt[i].getMaximumResolution = function () {
-        return maxZoom;
-      };
-    }
 
     setCenter();
     savedMapState = $.cookie('simplegeoMapState');

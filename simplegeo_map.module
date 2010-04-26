@@ -109,7 +109,7 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
   else if ($op == 'view') {
     if ($delta == 'map') {
       $position = variable_get('simple_geo_default_position', FALSE);
-      $zoom = variable_get('simple_geo_min_zoom', 12);
+      $zoom = variable_get('simplegeo_map_default_zoom', 12);
       _simplegeo_map_setup_map($position, $zoom);
 
       $block['title'] = t('Map');
@@ -170,6 +170,7 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
     $settings['zoom'] = $zoom;
   }
 
+  $settings['images'] = url(drupal_get_path('module', 'simplegeo_map') . '/img');
   $settings['maxNodes'] = variable_get('simplegeo_api_max_node_info', SIMPLEGEO_API_MAX_NODE_INFO);
   $themes = simplegeo_map_marker_themes();
   $theme = variable_get('simplegeo_map_marker_theme', 'orange');
@@ -197,6 +198,12 @@ function simplegeo_map_simplegeo_map_plugin() {
     'name' => 'simplegeo_map_infowindow',
     'title' => t('Default info window'),
     'js' => array('js/simplegeo_infowindow.js'),
+  );
+
+  $plugins[] = array(
+    'name' => 'simplegeo_map_microformat',
+    'title' => t('Display microformat'),
+    'js' => array('js/microformats.js'),
   );
 
   return $plugins;

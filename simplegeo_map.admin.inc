@@ -34,6 +34,14 @@ function simplegeo_map_settings() {
     );
   }
 
+  $form['simplegeo_map_default_zoom'] = array(
+    '#type' => 'select',
+    '#title' => t('Default zoom'),
+    '#description' => t('The default zoom level for the map'),
+    '#options' => range(1, 17),
+    '#default_value' => variable_get('simplegeo_map_default_zoom', 12),
+  );
+
   $plugins = array();
   foreach (module_implements('simplegeo_map_plugin') as $module) {
     $mp = call_user_func($module . '_simplegeo_map_plugin');
