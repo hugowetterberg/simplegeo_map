@@ -48,7 +48,6 @@
         });
         $(geo.parentNode).find('a[rel=map]').click(function() {
           SimpleGeoMap.getMap().setCenter(marker.getLatLng(), Math.max(SimpleGeoMap.getMap().getZoom(), default_zoom));
-          return false;
         }).attr('href', '#' + SimpleGeoMap.mapElement.id);
       });
 
