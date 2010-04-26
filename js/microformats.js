@@ -7,7 +7,7 @@
       icon.image = Drupal.settings.simpleGeoMap.images + '/location.png';
       icon.iconSize = new GSize(24, 24);
       icon.iconAnchor = new GPoint(12, 12);
-      default_zoom = parseInt(Drupal.settings.simple_geo_max_zoom);
+      default_zoom = parseInt(Drupal.settings.simple_geo_max_zoom, 10);
 
       tmp_ids = 0;
       $.each(positions, function(i, geo) {
