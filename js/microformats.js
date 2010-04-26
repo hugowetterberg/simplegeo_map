@@ -42,7 +42,9 @@
             });
           });
           window.location.hash = '#' + level.id;
-          SimpleGeoMap.getMap().setCenter(marker.getLatLng(), default_zoom);
+          if (positions.length == 1) {
+            SimpleGeoMap.getMap().setCenter(marker.getLatLng(), default_zoom);
+          }
         });
         $(geo.parentNode).find('a[rel=map]').click(function() {
           SimpleGeoMap.getMap().setCenter(marker.getLatLng(), Math.max(SimpleGeoMap.getMap().getZoom(), default_zoom));
