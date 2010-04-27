@@ -2,7 +2,7 @@
 var SimpleGeoMap = {};
 
 (function ($){ // Create local scope.
-  var map, mapWrapper, cluster,
+  var map, mapWrapper, cluster, urlRepresentation, filterPresets = {},
   oldCenter = false, padding = 256, ajax, infoWindow, filterInputs, filters,
   filterCookie, enabledFilters = [], loader, mapState = 1, smallZoomControl,
   largeZoomControl, helpBox, maxZoom = 17, minZoom = 7,
@@ -119,6 +119,20 @@ var SimpleGeoMap = {};
     }
   };
 
+  SimpleGeoMap.urlRepresentation = function (repr) {
+    var zoomLevel = map.getZoom(),
+      center = map.getCenter(), rString = '';
+
+    if (typeof repr !== 'undefined') {
+      urlRepresentation = repr;
+    }
+    if (urlRepresentation) {
+      rString = '/' + urlRepresentation;
+    }
+
+    window.location = '#z' + zoomLevel + 'p' + center.lat() + 'p' + center.lng() + '/' + activeSource + rString;
+  };
+
   SimpleGeoMap.updateMarkers = function (forceRefresh) {
     if (!activeSource || !sources[activeSource]) {
       SimpleGeoMap.removeMarkers();
@@ -133,6 +147,7 @@ var SimpleGeoMap = {};
     tile, topLeftPixel, topLeftTile, bottomRightPixel, bottomRightTile, url, data, tid, markersArray = [],
     source = sources[activeSource];
 
+    SimpleGeoMap.urlRepresentation();
 
     // Only fetch new markers if the map is moved outside the padding or
     // forceRefresh is specified.
@@ -355,7 +370,7 @@ var SimpleGeoMap = {};
       }
     }
     else if (Drupal.settings.simpleGeoMap.zoom) {
-      zoom = parseInt(Drupal.settings.simpleGeoMap.zoom);
+      zoom = parseInt(Drupal.settings.simpleGeoMap.zoom, 10);
     }
     else {
       zoom = 10;
@@ -385,6 +400,17 @@ var SimpleGeoMap = {};
 
     cluster = new ClusterMarker(map, {intersectPadding: 5});
     //cluster = new ClusterMarker(map, {intersectPadding: 5, clusteringEnabled: false});
+
+    if (window.location.hash.substr(1, 1) == 'z') {
+      (function(persisted){
+        var segments = persisted.split('/'),
+          positioning = segments[0].split('p'),
+          c = new GLatLng(parseFloat(positioning[1]), parseFloat(positioning[2]));
+        map.setCenter(c, parseInt(positioning[0], 10));
+        filterPresets[segments[1]] = segments.slice(2);
+        urlRepresentation = segments.slice(2).join('/');
+      })(window.location.hash.substr(2));
+    }
 
     GEvent.addListener(map, "click", function (overlay) {
       closeHelpBox();
@@ -417,7 +443,11 @@ var SimpleGeoMap = {};
 
     // Init sources
     $.each(sources, function(sourceName, source) {
-      source.dialog = source.init();
+      var preset = null;
+      if (typeof filterPresets[sourceName] !== 'undefined') {
+        preset = filterPresets[sourceName];
+      }
+      source.dialog = source.init(preset);
     });
 
     // Add toolbar
