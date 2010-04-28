@@ -130,7 +130,9 @@ var SimpleGeoMap = {};
       rString = '/' + urlRepresentation;
     }
 
-    window.location = '#z' + zoomLevel + 'p' + center.lat() + 'p' + center.lng() + '/' + activeSource + rString;
+    if (Drupal.settings.simpleGeoMap.setUrlHash) {
+      window.location = '#z' + zoomLevel + 'p' + center.lat() + 'p' + center.lng() + '/' + activeSource + rString;
+    }
   };
 
   SimpleGeoMap.updateMarkers = function (forceRefresh) {

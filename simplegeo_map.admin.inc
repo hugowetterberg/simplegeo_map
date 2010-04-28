@@ -42,6 +42,13 @@ function simplegeo_map_settings() {
     '#default_value' => variable_get('simplegeo_map_default_zoom', 12),
   );
 
+  $form['simplegeo_map_permalink_hash'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Set url hash to enable linkning'),
+    '#description' => t('If this is enabled the map will set a url hash (#) that represents the current state of the map. This can then be used to link to the ma in it\'s current state.'),
+    '#default_value' => variable_get('simplegeo_map_permalink_hash', FALSE),
+  );
+
   $plugins = array();
   foreach (module_implements('simplegeo_map_plugin') as $module) {
     $mp = call_user_func($module . '_simplegeo_map_plugin');
@@ -64,7 +71,6 @@ function simplegeo_map_settings() {
 
 function simplegeo_map_settings_validate($form, &$form_state) {
   if (!is_numeric($form_state['values']['simplegeo_api_max_node_info'])) {
-    error_log(var_export($form_state['values']['simplegeo_api_max_node_info'], TRUE));
     form_set_error('simplegeo_api_max_node_info', t('Maximum number of nodes must be numeric'));
   }
 }

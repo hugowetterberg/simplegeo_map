@@ -172,6 +172,7 @@ function _simplegeo_map_setup_map($center = NULL, $zoom = NULL) {
 
   $settings['images'] = url(drupal_get_path('module', 'simplegeo_map') . '/img');
   $settings['maxNodes'] = variable_get('simplegeo_api_max_node_info', SIMPLEGEO_API_MAX_NODE_INFO);
+  $settings['setUrlHash'] = variable_get('simplegeo_map_permalink_hash', FALSE);
   $themes = simplegeo_map_marker_themes();
   $theme = variable_get('simplegeo_map_marker_theme', 'orange');
   $settings['markerTheme'] = $themes[$theme];
