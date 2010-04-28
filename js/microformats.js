@@ -51,7 +51,6 @@
         }).attr('href', '#' + SimpleGeoMap.mapElement.id);
       });
 
-      console.log(positions.length);
       if (positions.length == 1) {
         SimpleGeoMap.getMap().setCenter(last_marker.getLatLng(), Number(default_zoom));
       }
