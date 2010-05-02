@@ -49,7 +49,7 @@
       $('#simplegeomap-info-content').empty();
 
       // Display loader
-      $('#simplegeomap-info-content').html('<div class="marker-info marker-info-loading">Loading...</div>');
+      $('#simplegeomap-info-content').html('<div class="marker-info marker-info-loading">' + Drupal.t('Loading...') + '</div>');
 
       // Show window to user
       elem.show();
