@@ -98,6 +98,7 @@ div.marker-label-100 {
 #simplegeo-map-wrapper #simplegeo-map {
   clear: left;
   height: 200px;
+  overflow: hidden;
 }
 
 /* fullscreen mode */
