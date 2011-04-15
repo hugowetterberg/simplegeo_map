@@ -386,7 +386,7 @@ var SimpleGeoMap = {};
   }
 
   function init() {
-    var mt, i, savedMapState;
+    var mt, i, savedMapState, settings;
     mapWrapper = $("#simplegeo-map-wrapper");
 
     SimpleGeoMap.mapElement = document.getElementById("simplegeo-map");
@@ -405,8 +405,8 @@ var SimpleGeoMap = {};
       map.addControl(largeZoomControl);
     }
 
-    cluster = new ClusterMarker(map, {intersectPadding: 5});
-    //cluster = new ClusterMarker(map, {intersectPadding: 5, clusteringEnabled: false});
+    settings = Drupal.settings.simpleGeoMap.clientClustering ? {intersectPadding: 5} : {clusteringEnabled: false};
+    cluster = new ClusterMarker(map, settings);
 
     if (window.location.hash.substr(1, 1) == 'z') {
       (function(persisted){

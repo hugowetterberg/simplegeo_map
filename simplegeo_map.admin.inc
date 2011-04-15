@@ -49,6 +49,13 @@ function simplegeo_map_settings() {
     '#default_value' => variable_get('simplegeo_map_permalink_hash', FALSE),
   );
 
+  $form['simplegeo_map_client_clustering'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable client side clustering'),
+    '#description' => t('Client side clustering clusters markers with JavaScript in the users browser.'),
+    '#default_value' => variable_get('simplegeo_map_client_clustering', TRUE),
+  );
+
   $plugins = array();
   foreach (module_implements('simplegeo_map_plugin') as $module) {
     $mp = call_user_func($module . '_simplegeo_map_plugin');
