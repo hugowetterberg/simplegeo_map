@@ -38,7 +38,7 @@ function simplegeo_map_settings() {
     '#type' => 'select',
     '#title' => t('Default zoom'),
     '#description' => t('The default zoom level for the map'),
-    '#options' => range(1, 17),
+    '#options' => drupal_map_assoc(range(1, 21)),
     '#default_value' => variable_get('simplegeo_map_default_zoom', 12),
   );
 
