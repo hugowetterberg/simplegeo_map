@@ -195,6 +195,10 @@ var SimpleGeoMap = {};
               else {
                 clusterBounds.extend(new GLatLng(m.lat, m.lon));
               };
+              // If string convert to array.
+              if (m.nid.constructor !== Array) {
+                m.nid = [m.nid];
+              }
               markersArray.push(newMarker(type, new GLatLng(m.lat, m.lon), m.count, clusterBounds, m.nid, Drupal.t("Show items"), map));
             });
 
