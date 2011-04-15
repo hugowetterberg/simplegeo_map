@@ -73,11 +73,6 @@ div.marker-label-100 {
   display: block;
   position: absolute;
   top: 0;
-  left: 0;
-}
-
-#simplegeomap-info-window .nodes {
-  padding: 5px;
 }
 
 #simplegeo-map-wrapper ul.dialog {
