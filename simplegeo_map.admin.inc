@@ -44,7 +44,7 @@ function simplegeo_map_settings() {
 
   $form['simplegeo_map_permalink_hash'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Set url hash to enable linkning'),
+    '#title' => t('Set url hash to enable linking'),
     '#description' => t('If this is enabled the map will set a url hash (#) that represents the current state of the map. This can then be used to link to the ma in it\'s current state.'),
     '#default_value' => variable_get('simplegeo_map_permalink_hash', FALSE),
   );
