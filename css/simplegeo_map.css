@@ -120,7 +120,7 @@ html.fullscreen #simplegeo-map-wrapper {
   position: relative;
   z-index: 50;
 }
-html.fullscreen #simplegeo-map-wrapper.large #simplegeo-map, html.fullscreen #simplegeo-map-wrapper.small #simplegeo-map {
+html.fullscreen #simplegeo-map-wrapper #simplegeo-map, html.fullscreen #simplegeo-map-wrappe r#simplegeo-map {
   height: 100%;
   width: auto;
 }
