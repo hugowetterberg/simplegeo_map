@@ -112,7 +112,7 @@ function simplegeo_map_block($op = 'list', $delta = 0) {
       $zoom = variable_get('simplegeo_map_default_zoom', 12);
       _simplegeo_map_setup_map($position, $zoom);
 
-      $block['title'] = t('Map');
+      $block['subject'] = t('Map');
       $block['content'] = '<div id="simplegeo-map-wrapper"><div id="simplegeo-map"></div></div>';
     }
   }
